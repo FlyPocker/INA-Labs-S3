@@ -1,0 +1,211 @@
+-- ZADANIE 1 --
+CREATE DATABASE IF NOT EXISTS aparaty;
+USE aparaty;
+
+CREATE USER '289923'@'%' IDENTIFIED BY 'Rudzik23';
+
+GRANT EXECUTE ON aparaty.* TO '289923'@'%';
+
+FLUSH PRIVILEGES;
+
+-- ZADANIE 2 --
+CREATE TABLE Producent (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    nazwa VARCHAR(50) NOT NULL,
+    kraj VARCHAR(20) DEFAULT 'nieznany',
+    adresKorespondencyjny VARCHAR(100) DEFAULT 'nieznany'
+);
+
+CREATE TABLE Matryca (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    przekatna DECIMAL(4,2) CHECK (przekatna >= 0),
+    rozdzielczosc DECIMAL(3,1) CHECK (rozdzielczosc >= 0),
+    typ VARCHAR(10)
+) AUTO_INCREMENT = 100;
+
+CREATE TABLE Obiektyw (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    model VARCHAR(30),
+    minPrzeslona FLOAT CHECK (minPrzeslona >= 0),
+    maxPrzeslona FLOAT CHECK (maxPrzeslona >= 0),
+    CHECK (minPrzeslona < maxPrzeslona)
+);
+
+CREATE TABLE Aparat (
+    model VARCHAR(30) PRIMARY KEY,
+    producent INT,
+    matryca INT,
+    obiektyw INT,
+    waga FLOAT CHECK (waga >= 0),
+    typ ENUM('kompaktowy', 'lustrzanka', 'profesjonalny', 'inny'),
+    FOREIGN KEY (producent) REFERENCES Producent(ID),
+    FOREIGN KEY (matryca) REFERENCES Matryca(ID),
+    FOREIGN KEY (obiektyw) REFERENCES Obiektyw(ID)
+);
+
+-- ZADANIE 3 --
+/*Tutaj musimy pominac polaczenie z uzytkownikiem z zadania 1
+poniewaz w tej wersji zadan ma on za male uprawnienia. */
+
+INSERT INTO Producent (nazwa, kraj, adresKorespondencyjny) VALUES 
+('Canon', 'Japonia', 'Tokio 1'), ('Nikon', 'Japonia', 'Tokio 2'), ('Sony', 'Japonia', 'Minato 3'), 
+('Panasonic', 'Japonia', 'Osaka 4'), ('Fujifilm', 'Japonia', 'Tokio 5'), ('Olympus', 'Japonia', 'Tokio 6'), 
+('Leica', 'Niemcy', 'Wetzlar 7'), ('Pentax', 'Japonia', 'Tokio 8'), ('Hasselblad', 'Szwecja', 'Goteborg 9'), 
+('Sigma', 'Japonia', 'Kanagawa 10'), ('Ricoh', 'Japonia', 'Tokio 11'), ('GoPro', 'USA', 'San Mateo 12'), 
+('DJI', 'Chiny', 'Shenzhen 13'), ('Polaroid', 'USA', 'Minnetonka 14'), ('Kodak', 'USA', 'Rochester 15');
+
+INSERT INTO Matryca (przekatna, rozdzielczosc, typ) VALUES 
+(1.0, 12.0, 'CMOS'), (1.5, 24.2, 'CMOS'), (2.0, 45.7, 'BSI-CMOS'), 
+(1.0, 20.1, 'MOS'), (1.3, 26.1, 'X-Trans'), (0.8, 16.0, 'CMOS'), 
+(2.5, 50.0, 'CMOS'), (1.5, 24.0, 'CMOS'), (3.0, 99.0, 'CMOS'), 
+(2.0, 61.0, 'BSI-CMOS'), (1.0, 20.0, 'CMOS'), (0.5, 12.0, 'CMOS'), 
+(1.0, 20.0, 'CMOS'), (1.2, 18.0, 'CCD'), (0.9, 14.0, 'CCD');
+
+INSERT INTO Obiektyw (model, minPrzeslona, maxPrzeslona) VALUES 
+('Kit 18-55mm', 3.5, 22.0), ('Prime 50mm', 1.8, 16.0), ('Macro 100mm', 2.8, 32.0), 
+('Tele 70-200mm', 2.8, 22.0), ('Wide 10-24mm', 4.0, 22.0), ('Pancake 24mm', 2.8, 16.0), 
+('Portrait 85mm', 1.4, 16.0), ('Standard 35mm', 1.8, 22.0), ('Zoom 24-70mm', 2.8, 22.0), 
+('Super Tele 400mm', 4.0, 32.0), ('Fisheye 8mm', 3.5, 22.0), ('Kit 16-50mm', 3.5, 22.0), 
+('Pro 50mm', 1.2, 16.0), ('Travel 18-200mm', 3.5, 36.0), ('Cine 35mm', 1.5, 22.0);
+
+INSERT INTO Aparat (model, producent, matryca, obiektyw, waga, typ) VALUES 
+('EOS 2000D', 1, 100, 1, 0.47, 'lustrzanka'), ('D3500', 2, 101, 1, 0.36, 'lustrzanka'), 
+('Alpha a7 III', 3, 102, 9, 0.65, 'profesjonalny'), ('Lumix G100', 4, 103, 12, 0.35, 'kompaktowy'), 
+('X-T4', 5, 104, 5, 0.60, 'profesjonalny'), ('OM-D E-M10', 6, 105, 6, 0.39, 'inny'), 
+('M10', 7, 106, 2, 0.66, 'profesjonalny'), ('K-70', 8, 107, 1, 0.68, 'lustrzanka'), 
+('X1D II', 9, 108, 13, 0.65, 'profesjonalny'), ('fp L', 10, 109, 8, 0.42, 'inny'), 
+('GR III', 11, 110, 6, 0.25, 'kompaktowy'), ('Hero 10', 12, 111, 11, 0.15, 'inny'), 
+('Osmo Action', 13, 112, 11, 0.12, 'inny'), ('Now +', 14, 113, 2, 0.43, 'inny'), 
+('Pixpro FZ53', 15, 114, 1, 0.10, 'kompaktowy');
+
+-- ZADANIE 4 --
+/*
+1.Uzytkownik nie jest w stanie stworzyc tej procedury ponieważ nie posiada on uprawnienia
+    CREATE ROUTINE oraz INSERT na tabele aparat aby procedura rowniez mogla wstawiac do niej dane
+2.Uzytkownik jest w stanie wykonać procedure ponieważ ma uprawnienia EXECUTE, aby to zrobic musi wywolac:
+    CALL GenerujAparaty();
+*/
+DELIMITER $$
+CREATE PROCEDURE GenerujAparaty()
+BEGIN
+    DECLARE i INT DEFAULT 0;
+    DECLARE max_nr INT DEFAULT 0;
+    DECLARE p_id INT;
+    DECLARE m_id INT;
+    DECLARE o_id INT;
+
+    SELECT COALESCE(MAX(CAST(SUBSTRING(model, 8) AS UNSIGNED)), 0) INTO max_nr 
+    FROM Aparat 
+    WHERE model LIKE 'Aparat-%';
+    
+    WHILE i < 100 DO
+        SET max_nr = max_nr + 1;
+        
+        SELECT ID INTO p_id FROM Producent ORDER BY RAND() LIMIT 1;
+        SELECT ID INTO m_id FROM Matryca ORDER BY RAND() LIMIT 1;
+        SELECT ID INTO o_id FROM Obiektyw ORDER BY RAND() LIMIT 1;
+
+        INSERT INTO Aparat (model, producent, matryca, obiektyw, waga, typ)
+        VALUES (CONCAT('Aparat-', max_nr), p_id, m_id, o_id, 0.5, 'kompaktowy');
+
+        SET i = i + 1;
+    END WHILE;
+END$$
+DELIMITER ;
+
+-- ZADANIE 5 --
+/*
+Konsekwencje ustawienia funkcji na DETERMINISTIC oznaczaja dla bazy danych, ze 
+funkcja zwraca dla podanego argumentu zawsze to samo, wtedy baza dostaje opcje 
+robnienia cache wyniku funkcji dla konkretnych danych.
+Jednak w tym przypadku nie mozemy tej funkcji ustawic na deterministyczna, poniewaz
+mogloby to powodowac bledne wyniki w momencie dodania nowych aparatow do tabeli aparaty
+funkcja czyta dane z tabeli wiec nie powinna byc deterministyczna.
+*/
+
+DELIMITER $$
+CREATE FUNCTION ModelNajmniejszaMatryca(id_prod INT)
+RETURNS VARCHAR(30)
+NOT DETERMINISTIC 
+READS SQL DATA
+BEGIN
+    DECLARE nazwa_modelu VARCHAR(30);
+
+    SELECT a.model INTO nazwa_modelu
+    FROM Aparat a
+    JOIN Matryca m ON a.matryca = m.ID
+    WHERE a.producent = id_prod
+    ORDER BY m.przekatna ASC
+    LIMIT 1;
+
+    RETURN nazwa_modelu;
+END$$
+DELIMITER ;
+
+-- ZADANIE 6 --
+DELIMITER $$
+CREATE FUNCTION sprawdz_aparat(id_producenta INT, id_matrycy INT, id_obiektywu INT)
+RETURNS BOOLEAN
+READS SQL DATA
+BEGIN
+    DECLARE prod_istnieje INT;
+    DECLARE mat_istnieje INT;
+    DECLARE ob_istnieje INT;
+    SELECT COUNT(*) INTO prod_istnieje FROM Producent WHERE ID = id_producenta;
+    SELECT COUNT(*) INTO mat_istnieje FROM Matryca WHERE ID = id_matrycy;
+    SELECT COUNT(*) INTO ob_istnieje FROM Obiektyw WHERE ID = id_obiektywu;
+
+    IF prod_istnieje > 0 AND mat_istnieje > 0 AND ob_istnieje > 0 THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+END$$
+DELIMITER ;
+
+-- ZADANIE 7 --
+/*Tutaj musimy stworzyc dwa wyzwalacze poniewaz MySQL, chyba rowniez jak MariaDB
+nie pozwalaja na nasluchiwanie dwoch roznych akcji w triggerze*/
+DELIMITER $$
+CREATE TRIGGER BlokujEdycjeObiektywu BEFORE UPDATE ON Obiektyw
+FOR EACH ROW
+BEGIN
+    DECLARE czy_przypisany INT;
+    SELECT COUNT(*) INTO czy_przypisany FROM Aparat WHERE obiektyw = OLD.ID;
+    
+    IF czy_przypisany > 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Błąd: Ten obiektyw jest przypisany do aparatu i nie moze byc modyfikowany.';
+    END IF;
+END$$
+
+CREATE TRIGGER BlokujUsuniecieObiektywu BEFORE DELETE ON Obiektyw
+FOR EACH ROW
+BEGIN
+    DECLARE czy_przypisany INT;
+    SELECT COUNT(*) INTO czy_przypisany FROM Aparat WHERE obiektyw = OLD.ID;
+    
+    IF czy_przypisany > 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Błąd: Ten obiektyw jest przypisany do aparatu i nie moze byc usuniety.';
+    END IF;
+END$$
+DELIMITER ;
+
+-- ZADANIE 8 --
+CREATE TABLE HistoriaProducentow (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_producenta INT,
+    stary_kraj VARCHAR(20),
+    nowy_kraj VARCHAR(20),
+    data_zmiany DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+DELIMITER $$
+CREATE TRIGGER ZmianaKrajuProducenta AFTER UPDATE ON Producent
+FOR EACH ROW
+BEGIN
+    IF OLD.kraj != NEW.kraj THEN
+        INSERT INTO HistoriaProducentow (id_producenta, stary_kraj, nowy_kraj, data_zmiany)
+        VALUES (OLD.ID, OLD.kraj, NEW.kraj, NOW());
+    END IF;
+END$$
+DELIMITER ;

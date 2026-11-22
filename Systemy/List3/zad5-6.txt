@@ -1,0 +1,63 @@
+===ZADANIE 5===
+Tutaj należy wstawić kod expr.c do naszego repozytorium Xv6, oraz dodać w sekcji UPROGS _expr\
+aby kod mógł zostać uruchomiony we włączonym systemie.
+===ZADANIE 6===
+podobnie jak w 5 należy wstawić kod hello.c do repozytorium Xv6, dodać go do sekcji UPROGS: _hello\
+by mozna było wytestować zmiany przy pomocy komendy hello, a zmiany w kodzie są w pliku console.c,
+są to zmiany(oznaczone odpowiednim komentarzem) przy fragmencie pliku z cgaputc:
+
+static int expect_color = 0; //zadanie 6 lista 3
+static ushort current_color = 0x0700; // zadanie 6 lista 3
+
+static void
+cgaputc(int c)
+{
+  int pos;
+  
+  //zadanie 6 lista 3
+  if(expect_color == 1){
+    expect_color = 0;
+    if(c >= '0' && c <= '7'){
+      current_color = (c - '0') << 8;
+      return;
+    }
+    else if(c == 'r'){
+      current_color = 0x0700;
+      return;
+    }
+  }
+  else if(c == '%'){
+    expect_color = 1;
+    return;
+  }
+  //zadanie 6 lista 3
+
+  // Cursor position: col + 80*row.
+
+  outb(CRTPORT, 14);
+  pos = inb(CRTPORT+1) << 8;
+  outb(CRTPORT, 15);
+  pos |= inb(CRTPORT+1);
+
+  if(c == '\n')
+    pos += 80 - pos%80;
+  else if(c == BACKSPACE){
+    if(pos > 0) --pos;
+  } else
+    crt[pos++] = (c&0xff) | current_color;  // black on white // zamiana zadanie 6 lista 3 na nasz kolor
+
+  if(pos < 0 || pos > 25*80)
+    panic("pos under/overflow");
+
+  if((pos/80) >= 24){  // Scroll up.
+    memmove(crt, crt+80, sizeof(crt[0])*23*80);
+    pos -= 80;
+    memset(crt+pos, 0, sizeof(crt[0])*(24*80 - pos));
+  }
+
+  outb(CRTPORT, 14);
+  outb(CRTPORT+1, pos>>8);
+  outb(CRTPORT, 15);
+  outb(CRTPORT+1, pos);
+  crt[pos] = ' ' | 0x0700;
+}

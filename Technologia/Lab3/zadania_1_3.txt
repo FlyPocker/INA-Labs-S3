@@ -1,0 +1,2106 @@
+==> adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/DoorController.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter;
+
+import eu.jpereira.trainings.designpatterns.structural.adapter.DoorNotManagedException;
+import eu.jpereira.trainings.designpatterns.structural.adapter.exceptions.IncorrectDoorCodeException;
+import eu.jpereira.trainings.designpatterns.structural.adapter.model.Door;
+
+/**
+ * @author jpereira
+ *
+ */
+public interface DoorController {
+
+	/**
+	 * Add a controlled door
+	 * @param targetDoor
+	 */
+	void addDoor(Door targetDoor);
+
+	/**
+	 * @param mocekedDoor
+	 * @throws DoorNotManagedException 
+	 * @throws IncorrectDoorCodeException 
+	 */
+	void openDoor(Door door, String doorCode) throws DoorNotManagedException, IncorrectDoorCodeException;
+	
+	void closeDoor(Door door) throws DoorNotManagedException;
+
+	/**
+	 * @return
+	 */
+	int countManagedDoors();
+
+}
+
+==> adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/SimpleDoorController.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import eu.jpereira.trainings.designpatterns.structural.adapter.DoorNotManagedException;
+import eu.jpereira.trainings.designpatterns.structural.adapter.exceptions.IncorrectDoorCodeException;
+import eu.jpereira.trainings.designpatterns.structural.adapter.model.Door;
+
+/**
+ * @author jpereira
+ * 
+ */
+public class SimpleDoorController implements DoorController {
+
+	private List<Door> managedDoors;
+
+	public SimpleDoorController() {
+		this.managedDoors = createManagedDoorsComposite();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.jpereira.trainings.designpatterns.structural.adapter.DoorController
+	 * #addDoor
+	 * (eu.jpereira.trainings.designpatterns.structural.adapter.model.Door)
+	 */
+	@Override
+	public void addDoor(Door managedDoor) {
+		if ( !this.managedDoors.contains(managedDoor)) {
+			this.managedDoors.add(managedDoor);
+		}
+		
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.jpereira.trainings.designpatterns.structural.adapter.DoorController
+	 * #openDoor
+	 * (eu.jpereira.trainings.designpatterns.structural.adapter.model.Door)
+	 */
+	@Override
+	public void openDoor(Door door, String doorCode) throws DoorNotManagedException, IncorrectDoorCodeException{
+		getDoor(door).open(doorCode);
+		
+	}
+
+	/**
+	 * FActory method
+	 * 
+	 * @return
+	 */
+	protected List<Door> createManagedDoorsComposite() {
+		
+		return new ArrayList<Door>();
+	}
+
+	/* (non-Javadoc)
+	 * @see eu.jpereira.trainings.designpatterns.structural.adapter.DoorController#countManagedDoors()
+	 */
+	@Override
+	public int countManagedDoors() {
+		return this.managedDoors.size();
+	}
+
+	/* (non-Javadoc)
+	 * @see eu.jpereira.trainings.designpatterns.structural.adapter.DoorController#closeDoor(eu.jpereira.trainings.designpatterns.structural.adapter.model.Door)
+	 */
+	@Override
+	public void closeDoor(Door door) throws DoorNotManagedException {
+		getDoor(door).close();
+		
+	}
+
+	
+	private Door getDoor(Door door) throws DoorNotManagedException {
+		if ( this.managedDoors.contains(door)) {
+			return this.managedDoors.get(this.managedDoors.indexOf(door));
+		} else {
+			throw new DoorNotManagedException();
+		}		
+	}
+}
+
+==> adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/DoorNotManagedException.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter;
+
+/**
+ * @author jpereira
+ *
+ */
+public class DoorNotManagedException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+}
+
+==> adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/model/Door.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter.model;
+
+import eu.jpereira.trainings.designpatterns.structural.adapter.exceptions.CodeMismatchException;
+import eu.jpereira.trainings.designpatterns.structural.adapter.exceptions.IncorrectDoorCodeException;
+
+/**
+ * @author jpereira
+ * 
+ */
+public interface Door {
+
+	
+
+	/**
+	 * Open the door if the code is correct
+	 * 
+	 * @param code
+	 *            the code to open the door
+	 * @throws IncorrectDoorCodeException
+	 *             if the code is not correct
+	 */
+	void open(String code) throws IncorrectDoorCodeException;
+
+	/**
+	 * Attempt to close the door
+	 */
+	void close();
+
+	/**
+	 * Test if the door is open
+	 * 
+	 * @return
+	 */
+	boolean isOpen();
+
+	/**
+	 * Attempt to change the door code
+	 * 
+	 * @param oldCode
+	 *            The old code
+	 * @param newCode
+	 *            the new code
+	 * @param newCodeConfirmation
+	 *            the new code confirmation
+	 * @throws IncorrectDoorCodeException
+	 */
+	void changeCode(String oldCode, String newCode, String newCodeConfirmation)
+			throws IncorrectDoorCodeException, CodeMismatchException;
+
+	/**
+	 * Test if a given code can open the door
+	 * 
+	 * @param code
+	 *            the code to test
+	 * @return true if the code can open the door, false otherwise
+	 */
+	boolean testCode(String code);
+
+}
+
+==> adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/model/SimpleDoor.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter.model;
+
+import eu.jpereira.trainings.designpatterns.structural.adapter.exceptions.CodeMismatchException;
+import eu.jpereira.trainings.designpatterns.structural.adapter.exceptions.IncorrectDoorCodeException;
+
+/**
+ * @author jpereira
+ * 
+ */
+public class SimpleDoor implements Door {
+
+	public static String DEFAULT_DOOR_CODE = "AAFF1299BFA";
+
+	private String code = DEFAULT_DOOR_CODE;
+
+	private boolean open = false;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.jpereira.trainings.designpatterns.structural.adapter.model.DoorDriver
+	 * #open(java.lang.String)
+	 */
+	@Override
+	public void open(String code) throws IncorrectDoorCodeException {
+		// try the code
+		if (this.code.equals(code)) {
+			this.open = true;
+		} else {
+			throw new IncorrectDoorCodeException();
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.jpereira.trainings.designpatterns.structural.adapter.model.DoorDriver
+	 * #close()
+	 */
+	@Override
+	public void close() {
+		this.open = false;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.jpereira.trainings.designpatterns.structural.adapter.model.DoorDriver
+	 * #isOpen()
+	 */
+	@Override
+	public boolean isOpen() {
+		return this.open;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.jpereira.trainings.designpatterns.structural.adapter.model.DoorDriver
+	 * #changeCode(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void changeCode(String oldCode, String newCode, String newCodeConfirmation) throws IncorrectDoorCodeException, CodeMismatchException {
+
+		if (newCode.equals(newCodeConfirmation)) {
+			if (oldCode.equals(this.code)) {
+				this.code = newCode;
+			} else {
+				throw new IncorrectDoorCodeException();
+			}
+		} else {
+			throw new CodeMismatchException();
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.jpereira.trainings.designpatterns.structural.adapter.model.DoorDriver
+	 * #testCode(java.lang.String)
+	 */
+	@Override
+	public boolean testCode(String code) {
+		return code.equals(this.code);
+	}
+
+}
+
+==> adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/thirdparty/ThirdPartyDoor.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty;
+
+import eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.exceptions.CannotChangeCodeForUnlockedDoor;
+import eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.exceptions.CannotChangeStateOfLockedDoor;
+import eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.exceptions.CannotUnlockDoorException;
+
+
+
+/**
+ * @author jpereira
+ *
+ */
+public class ThirdPartyDoor {
+
+	public enum LockStatus {
+		LOCKED, UNLOCKED;
+	}
+	public enum DoorState {
+		OPEN, CLOSED;
+	}
+	public static final String DEFAULT_CODE ="AAAAHHHH";
+	private String code = DEFAULT_CODE;
+	private LockStatus lockStatus = LockStatus.LOCKED;
+	private DoorState doorState = DoorState.CLOSED;
+
+	
+	/**
+	 * Before you can use this instance, you unlock the door
+	 * @param usedCode
+	 */
+	public void unlock(String code) throws CannotUnlockDoorException {
+		if ( code.equals(this.code)) {
+			lockStatus = LockStatus.UNLOCKED;
+		} else {
+			throw new CannotUnlockDoorException();
+		}
+	}
+
+
+	/**
+	 * @return
+	 */
+	public LockStatus getLockStatus() {
+		
+		return this.lockStatus;
+	}
+
+
+	/**
+	 * @return
+	 */
+	public DoorState getState() {
+		return this.doorState;
+	}
+
+
+	/**
+	 * @param state
+	 */
+	public void setState(DoorState state) throws CannotChangeStateOfLockedDoor {
+		if ( this.lockStatus.equals(LockStatus.LOCKED)) {
+			throw new CannotChangeStateOfLockedDoor();
+		}
+		this.doorState = state;
+		
+	}
+
+
+	/**
+	 * 
+	 */
+	public void lock() {
+		this.lockStatus = LockStatus.LOCKED;
+		
+	}
+
+
+	/**
+	 * @param newCode
+	 * @throws CannotChangeCodeForUnlockedDoor 
+	 */
+	public void setNewLockCode(String newCode) throws CannotChangeCodeForUnlockedDoor {
+		if (this.lockStatus.equals(LockStatus.LOCKED)) {
+			throw new CannotChangeCodeForUnlockedDoor();
+		}
+		this.code = newCode;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+
+}
+
+==> adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/thirdparty/exceptions/CannotChangeStateOfLockedDoor.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.exceptions;
+
+/**
+ * @author jpereira
+ *
+ */
+public class CannotChangeStateOfLockedDoor extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+}
+
+==> adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/thirdparty/exceptions/CannotChangeCodeForUnlockedDoor.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.exceptions;
+
+/**
+ * @author jpereira
+ *
+ */
+public class CannotChangeCodeForUnlockedDoor extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+}
+
+==> adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/thirdparty/exceptions/CannotUnlockDoorException.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.exceptions;
+
+/**
+ * @author jpereira
+ *
+ */
+public class CannotUnlockDoorException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+}
+
+==> adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/exceptions/IncorrectDoorCodeException.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter.exceptions;
+
+
+/**
+ * @author jpereira
+ * 
+ */
+public class IncorrectDoorCodeException extends Exception {
+
+	/**
+	 * @param e
+	 */
+	public IncorrectDoorCodeException(Exception e) {
+		super(e);
+	}
+
+	/**
+	 * 
+	 */
+	public IncorrectDoorCodeException() {
+	}
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+}
+
+==> adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/exceptions/CodeMismatchException.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter.exceptions;
+
+/**
+ * @author jpereira
+ *
+ */
+public class CodeMismatchException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+}
+
+==> adapter/src/test/java/eu/jpereira/trainings/designpatterns/structural/adapter/DoorTest.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter;
+
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import eu.jpereira.trainings.designpatterns.structural.adapter.exceptions.CodeMismatchException;
+import eu.jpereira.trainings.designpatterns.structural.adapter.exceptions.IncorrectDoorCodeException;
+import eu.jpereira.trainings.designpatterns.structural.adapter.model.Door;
+import eu.jpereira.trainings.designpatterns.structural.adapter.model.SimpleDoor;
+/**
+ * 
+ * @author jpereira
+ *
+ */
+public class DoorTest {
+
+	@Test
+	public void shouldOpenDoor() throws IncorrectDoorCodeException {
+		Door door = createDoorUnderTest();
+		door.open(getDefaultDoorCode());
+		assertTrue(door.isOpen());
+		
+	}
+	
+
+	@Test(expected=IncorrectDoorCodeException.class)
+	public void shouldThrowExceptionForWrongCode() throws IncorrectDoorCodeException {
+		Door door = createDoorUnderTest();
+		door.open("SomeHCode");
+	}
+	@Test
+	public void shouldCloseDoor() throws IncorrectDoorCodeException {
+		Door door = createDoorUnderTest();
+		door.open(getDefaultDoorCode());
+		assertTrue(door.isOpen());
+		//close it
+		door.close();
+		assertFalse(door.isOpen());
+	}
+	
+	@Test
+	public void testChangeCode() throws IncorrectDoorCodeException, CodeMismatchException {
+		Door door = createDoorUnderTest();
+		door.changeCode(getDefaultDoorCode(), "123", "123");
+		assertTrue(door.testCode("123"));
+	}
+	
+	@Test(expected=IncorrectDoorCodeException.class)
+	public void testThrowExceptionForIncorrectCodeChangingCode() throws IncorrectDoorCodeException, CodeMismatchException {
+		Door door = createDoorUnderTest();
+		door.changeCode("Dummy", "123", "123");
+		
+	}
+
+	@Test(expected=CodeMismatchException.class)
+	public void testThrowExceptionForMismatchNewCode() throws IncorrectDoorCodeException, CodeMismatchException {
+		Door door = createDoorUnderTest();
+		door.changeCode(getDefaultDoorCode(), "123", "1a23");
+		
+	}
+
+	
+	/**
+	 * @return
+	 */
+	protected Door createDoorUnderTest() {
+		// TODO Auto-generated method stub
+		return new SimpleDoor();
+	}
+	
+
+	/**
+	 * @return
+	 */
+	protected String getDefaultDoorCode() {
+		return SimpleDoor.DEFAULT_DOOR_CODE;
+	}
+}
+
+==> adapter/src/test/java/eu/jpereira/trainings/designpatterns/structural/adapter/SimpleDoorControllerTest.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.Test;
+
+import eu.jpereira.trainings.designpatterns.structural.adapter.exceptions.IncorrectDoorCodeException;
+import eu.jpereira.trainings.designpatterns.structural.adapter.model.Door;
+import eu.jpereira.trainings.designpatterns.structural.adapter.model.SimpleDoor;
+
+/**
+ * @author jpereira
+ * 
+ */
+public class SimpleDoorControllerTest {
+
+	@Test(expected = DoorNotManagedException.class)
+	public void testShouldThrowExceptionForInexistentDoor() throws DoorNotManagedException, IncorrectDoorCodeException {
+		// Create a simple dummy door, conforming the Interface Door
+		Door aDoor = createMockedDoor();
+
+		// Add this door to the controller
+		DoorController controller = createDoorControllerUnderTest();
+		// do not add the door. Is expected an exception;
+		// can use any code, it's outside of test scope here
+		controller.openDoor(aDoor, getDefaultCodeForDoor());
+	}
+
+	@Test
+	public void testShouldNotAddSameElement() {
+		// Create a simple dummy door, conforming the Interface Door
+		Door mockedDoor = createMockedDoor();
+		DoorController controller = createDoorControllerUnderTest();
+		controller.addDoor(mockedDoor);
+
+		assertEquals(1, controller.countManagedDoors());
+		controller.addDoor(mockedDoor);
+		assertEquals(1, controller.countManagedDoors());
+	}
+
+	@Test
+	public void testShouldOpenDoor() throws DoorNotManagedException, IncorrectDoorCodeException {
+		// Create a simple dummy door, conforming the Interface Door
+		Door door = createMockedDoor();
+		// Add this door to the controller
+		DoorController controller = createDoorControllerUnderTest();
+		controller.addDoor(door);
+		// can use any code, it's outside of test scope here
+		controller.openDoor(door, getDefaultCodeForDoor());
+		// ensure that the door open() was called in the targetDoor
+		verify(door).open(getDefaultCodeForDoor());
+
+	}
+
+	@Test
+	public void testShouldCloseDoor() throws DoorNotManagedException, IncorrectDoorCodeException {
+		Door mockedDoor = createMockedDoor();
+		DoorController controller = createDoorControllerUnderTest();
+		// Add the door to the controller
+		controller.addDoor(mockedDoor);
+		// Open the door
+		controller.openDoor(mockedDoor, getDefaultCodeForDoor());
+		verify(mockedDoor).open(getDefaultCodeForDoor());
+		controller.closeDoor(mockedDoor);
+		verify(mockedDoor).close();
+
+	}
+
+	@Test(expected = DoorNotManagedException.class)
+	public void testShouldThrowExceptionClosingNotManagedDoor() throws DoorNotManagedException, IncorrectDoorCodeException {
+		Door mockedDoor = createMockedDoor();
+		DoorController controller = createDoorControllerUnderTest();
+		// dont add the door to the controller
+		controller.closeDoor(mockedDoor);
+
+	}
+
+	/**
+	 * Factory method for the door controller
+	 * 
+	 * @return
+	 */
+	protected DoorController createDoorControllerUnderTest() {
+		return new SimpleDoorController();
+	}
+
+	/**
+	 * @return
+	 */
+	protected String getDefaultCodeForDoor() {
+		return SimpleDoor.DEFAULT_DOOR_CODE;
+
+	}
+
+	/**
+	 * Factory method for test door
+	 * 
+	 * @return
+	 */
+	protected Door createMockedDoor() {
+		return mock(Door.class);
+
+	}
+}
+
+==> adapter/src/test/java/eu/jpereira/trainings/designpatterns/structural/adapter/thirdparty/ThirdPartyDoorObjectAdapterTest.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty;
+
+import eu.jpereira.trainings.designpatterns.structural.adapter.DoorTest;
+import eu.jpereira.trainings.designpatterns.structural.adapter.model.Door;
+import eu.jpereira.trainings.designpatterns.structural.adapter.model.SimpleDoor;
+
+/**
+ * @author windows
+ *
+ */
+public class ThirdPartyDoorObjectAdapterTest extends DoorTest{
+	@Override
+	protected Door createDoorUnderTest() {
+		return new SimpleDoor();
+		//return new ThirdPartyDoorObjectAdapter();
+	}
+
+	@Override
+	protected String getDefaultDoorCode() {
+		return SimpleDoor.DEFAULT_DOOR_CODE;
+		//return ThirdPartyDoor.DEFAULT_CODE;
+	}
+}
+
+==> adapter/src/test/java/eu/jpereira/trainings/designpatterns/structural/adapter/thirdparty/ThirdPartyAdapterTest.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty;
+
+import static org.junit.Assert.*;
+import eu.jpereira.trainings.designpatterns.structural.adapter.DoorTest;
+import eu.jpereira.trainings.designpatterns.structural.adapter.model.Door;
+import eu.jpereira.trainings.designpatterns.structural.adapter.model.SimpleDoor;
+
+/**
+ * @author windows
+ * 
+ */
+public class ThirdPartyAdapterTest extends DoorTest {
+
+
+	@Override
+	protected Door createDoorUnderTest() {
+		return new SimpleDoor();
+		//return new ThirdPartyDoorAdaper();
+	}
+
+	@Override
+	protected String getDefaultDoorCode() {
+		return SimpleDoor.DEFAULT_DOOR_CODE;
+		//return ThirdPartyDoor.DEFAULT_CODE;
+	}
+
+}
+
+==> adapter/src/test/java/eu/jpereira/trainings/designpatterns/structural/adapter/thirdparty/ThirdPartyDoorTest.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.ThirdPartyDoor.DoorState;
+import eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.ThirdPartyDoor.LockStatus;
+import eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.exceptions.CannotChangeCodeForUnlockedDoor;
+import eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.exceptions.CannotChangeStateOfLockedDoor;
+import eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.exceptions.CannotUnlockDoorException;
+
+/**
+ * @author jpereira
+ * 
+ */
+public class ThirdPartyDoorTest {
+
+	@Test
+	// Shoudl not throw any exception
+	public void testUnlockDoor() throws CannotUnlockDoorException {
+		ThirdPartyDoor door = createThirtPartyDoor();
+		door.unlock(getThirdPartyDoorCode());
+		assertTrue(door.getLockStatus().equals(LockStatus.UNLOCKED));
+	}
+
+	@Test(expected = CannotUnlockDoorException.class)
+	public void testUnlockDoorIncorrectCode() throws CannotUnlockDoorException {
+		ThirdPartyDoor door = createThirtPartyDoor();
+		door.unlock("Som code");
+	}
+	
+	@Test
+	public void testLockDoor() throws CannotUnlockDoorException {
+		ThirdPartyDoor door = createThirtPartyDoor();
+		door.unlock(getThirdPartyDoorCode());
+		assertTrue(door.getLockStatus().equals(LockStatus.UNLOCKED));
+		//Now lock it
+		door.lock();
+		assertTrue(door.getLockStatus().equals(LockStatus.LOCKED));
+		
+	}
+	
+	@Test
+	public void defaultDoorStateShouldBeClosed() {
+		ThirdPartyDoor door = createThirtPartyDoor();
+		assertEquals(DoorState.CLOSED, door.getState());
+	}
+	@Test
+	public void openDoor() throws CannotUnlockDoorException, CannotChangeStateOfLockedDoor {
+		ThirdPartyDoor door = createThirtPartyDoor();
+		//Unlock it
+		door.unlock(getThirdPartyDoorCode());
+		//Now open it
+		door.setState(DoorState.OPEN);
+		assertEquals(DoorState.OPEN, door.getState());
+	}
+	
+	@Test(expected=CannotChangeStateOfLockedDoor.class)
+	public void cannotOpenLockedDoor() throws CannotChangeStateOfLockedDoor {
+		ThirdPartyDoor door = createThirtPartyDoor();
+		//Do not unlock it
+		door.setState(DoorState.OPEN);	
+	}
+	
+	@Test
+	public void changeCode() throws CannotUnlockDoorException, CannotChangeCodeForUnlockedDoor {
+		ThirdPartyDoor door = createThirtPartyDoor();
+		door.unlock(getThirdPartyDoorCode());
+		door.setNewLockCode("Some Code");
+		
+		//Lock it
+		door.lock();
+		//Try to unlock it
+		door.unlock("Some Code");
+	}
+	@Test(expected=CannotChangeCodeForUnlockedDoor.class)
+	public void cannotChangeCodeForLockedDoor() throws CannotChangeCodeForUnlockedDoor {
+		ThirdPartyDoor door = createThirtPartyDoor();
+		//Do not unlock it
+		door.setNewLockCode("123");
+	}
+
+	/**
+	 * @return
+	 */
+	private String getThirdPartyDoorCode() {
+		// TODO Auto-generated method stub
+		return ThirdPartyDoor.DEFAULT_CODE;
+	}
+
+	/**
+	 * @return
+	 */
+	private ThirdPartyDoor createThirtPartyDoor() {
+		return new ThirdPartyDoor();
+	}
+
+}
+
+==> builder/src/main/java/eu/jpereira/trainings/designpatterns/creational/builder/ReportAssembler.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.builder;
+
+import java.util.Iterator;
+
+import eu.jpereira.trainings.designpatterns.creational.builder.json.JSONReportBody;
+import eu.jpereira.trainings.designpatterns.creational.builder.model.Report;
+import eu.jpereira.trainings.designpatterns.creational.builder.model.SaleEntry;
+import eu.jpereira.trainings.designpatterns.creational.builder.model.SoldItem;
+import eu.jpereira.trainings.designpatterns.creational.builder.xml.XMLReportBody;
+
+/**
+ * @author jpereira
+ * 
+ */
+public class ReportAssembler {
+
+	private SaleEntry saleEntry;
+
+	/**
+	 * @param reportDate
+	 */
+	public void setSaleEntry(SaleEntry saleEntry) {
+		this.saleEntry = saleEntry;
+
+	}
+
+	/**
+	 * @param type
+	 * @return
+	 */
+	public Report getReport(String type) {
+		Report report = new Report();
+
+		// Algorithms to build the body objects are different
+		if (type.equals("JSON")) {
+
+			JSONReportBody reportBody = new JSONReportBody();
+			//Add customer info
+			reportBody.addContent("sale:{customer:{");
+			reportBody.addContent("name:\"");
+			reportBody.addContent(saleEntry.getCustomer().getName());
+			reportBody.addContent("\",phone:\"");
+			reportBody.addContent(saleEntry.getCustomer().getPhone());
+			reportBody.addContent("\"}");
+			//add array of items
+			reportBody.addContent(",items:[");
+			Iterator<SoldItem> it = saleEntry.getSoldItems().iterator();
+			while ( it.hasNext() ) {
+				SoldItem item = it.next();
+				reportBody.addContent("{name:\"");
+				reportBody.addContent(item.getName());
+				reportBody.addContent("\",quantity:");
+				reportBody.addContent(String.valueOf(item.getQuantity()));
+				reportBody.addContent(",price:");
+				reportBody.addContent(String.valueOf(item.getUnitPrice()));
+				reportBody.addContent("}");
+				if ( it.hasNext() ) {
+					reportBody.addContent(",");
+				}
+				
+			}
+			reportBody.addContent("]}");
+			
+			
+			report.setReportBody(reportBody);
+
+		} else if (type.equals("XML")) {
+			XMLReportBody reportBody = new XMLReportBody();
+			reportBody.putContent("<sale><customer><name>");
+			reportBody.putContent(this.saleEntry.getCustomer().getName());
+			reportBody.putContent("</name><phone>");
+			reportBody.putContent(this.saleEntry.getCustomer().getPhone());
+			reportBody.putContent("</phone></customer>");
+			
+			reportBody.putContent("<items>");
+			
+			Iterator<SoldItem> it = saleEntry.getSoldItems().iterator();
+			while ( it.hasNext() ) {
+				SoldItem soldEntry= it.next();
+				reportBody.putContent("<item><name>");
+				reportBody.putContent(soldEntry.getName());
+				reportBody.putContent("</name><quantity>");
+				reportBody.putContent(soldEntry.getQuantity());
+				reportBody.putContent("</quantity><price>");
+				reportBody.putContent(soldEntry.getUnitPrice());
+				reportBody.putContent("</price></item>");
+			}
+			reportBody.putContent("</items></sale>");
+			report.setReportBody(reportBody);
+		} else if (type.equals("HTML")) {
+			
+			HTMLReportBody reportBody = new HTMLReportBody();
+			reportBody.putContent("<span class=\"customerName\">");
+			reportBody.putContent(this.saleEntry.getCustomer().getName());
+			reportBody.putContent("</span><span class=\"customerPhone\">");
+			reportBody.putContent(this.saleEntry.getCustomer().getPhone());
+			reportBody.putContent("</span>");
+			
+			reportBody.putContent("<items>");
+			
+			Iterator<SoldItem> it = saleEntry.getSoldItems().iterator();
+			while ( it.hasNext() ) {
+				SoldItem soldEntry= it.next();
+				reportBody.putContent("<item><name>");
+				reportBody.putContent(soldEntry.getName());
+				reportBody.putContent("</name><quantity>");
+				reportBody.putContent(soldEntry.getQuantity());
+				reportBody.putContent("</quantity><price>");
+				reportBody.putContent(soldEntry.getUnitPrice());
+				reportBody.putContent("</price></item>");
+			}
+			reportBody.putContent("</items>");
+			report.setReportBody(reportBody);
+		}
+
+		return report;
+	}
+
+}
+
+==> builder/src/main/java/eu/jpereira/trainings/designpatterns/creational/builder/xml/XMLReportBody.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.builder.xml;
+
+import eu.jpereira.trainings.designpatterns.creational.builder.model.ReportBody;
+
+/**
+ * This class is for demonstration purpose only!!
+ * 
+ * @author jpereira
+ * 
+ */
+public class XMLReportBody implements ReportBody {
+
+	private StringBuilder stringBuilder = new StringBuilder();
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see eu.jpereira.trainings.designpatterns.creational.builder.ReportBody#
+	 * getAsString()
+	 */
+	@Override
+	public Object getAsString() {
+
+		return stringBuilder.toString();
+	}
+
+	public void putContent(Object content) {
+		this.stringBuilder.append(content);
+	}
+
+}
+
+==> builder/src/main/java/eu/jpereira/trainings/designpatterns/creational/builder/HTMLReportBody.java <==
+package eu.jpereira.trainings.designpatterns.creational.builder;
+
+import eu.jpereira.trainings.designpatterns.creational.builder.model.ReportBody;
+
+public class HTMLReportBody implements ReportBody {
+
+	private StringBuffer delegate = new StringBuffer();
+
+	@Override
+	public Object getAsString() {
+		return this.delegate .toString();
+	}
+
+	public void putContent(Object content) {
+		this.delegate.append(content);
+		
+	}
+
+}
+
+==> builder/src/main/java/eu/jpereira/trainings/designpatterns/creational/builder/model/SoldItem.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.builder.model;
+
+
+/**
+ * @author jpereira
+ *
+ */
+public class SoldItem {
+
+
+	private String name;
+	private int quantity;
+	private double unitPrice;
+	
+	/**
+	 * @param string
+	 * @param i
+	 * @param date
+	 */
+	public SoldItem(String name, int quantity, double unitPrice) {
+		this.name = name;
+		this.quantity = quantity;
+		this.unitPrice = unitPrice;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public double getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(double unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+	
+	
+
+}
+
+==> builder/src/main/java/eu/jpereira/trainings/designpatterns/creational/builder/model/Customer.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.builder.model;
+
+/**
+ * @author jpereira
+ *
+ */
+public class Customer {
+
+	private String name;
+	private String phone;
+
+	/**
+	 * @param name
+	 * @param phone
+	 */
+	public Customer(String name, String phone) {
+		this.name = name;
+		this.phone = phone;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	
+	
+
+}
+
+==> builder/src/main/java/eu/jpereira/trainings/designpatterns/creational/builder/model/Report.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.builder.model;
+
+
+/**
+ * @author jpereira
+ *
+ */
+public class Report {
+
+	private ReportBody reportBody;
+
+	/**
+	 * @param reportBody
+	 */
+	public void setReportBody(ReportBody reportBody) {
+		this.reportBody = reportBody;
+		
+	}
+
+	/**
+	 * @return
+	 */
+	public Object getAsString() {
+		
+		return this.reportBody.getAsString();
+	}
+
+}
+
+==> builder/src/main/java/eu/jpereira/trainings/designpatterns/creational/builder/model/ReportBody.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.builder.model;
+
+/**
+ * @author jpereira
+ *
+ */
+public interface ReportBody {
+
+	/**
+	 * @return
+	 */
+	Object getAsString();
+
+}
+
+==> builder/src/main/java/eu/jpereira/trainings/designpatterns/creational/builder/model/SaleEntry.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.builder.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author jpereira
+ * 
+ */
+public class SaleEntry {
+
+	private Customer customer;
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public List<SoldItem> getSoldItems() {
+		return soldItems;
+	}
+
+	private List<SoldItem> soldItems;
+
+	/**
+	 * @param customer
+	 */
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+		this.soldItems = new ArrayList<SoldItem>();
+	}
+
+	/**
+	 * @param soldItem
+	 */
+	public void addSoldItem(SoldItem soldItem) {
+		this.soldItems.add(soldItem);
+
+	}
+
+}
+
+==> builder/src/main/java/eu/jpereira/trainings/designpatterns/creational/builder/json/JSONReportBody.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.builder.json;
+
+import eu.jpereira.trainings.designpatterns.creational.builder.model.ReportBody;
+
+/**
+ * For training purposes only!
+ * @author jpereira
+ *
+ */
+public class JSONReportBody implements ReportBody{
+
+	private StringBuilder stringBuilder = new StringBuilder();
+	/* (non-Javadoc)
+	 * @see eu.jpereira.trainings.designpatterns.creational.builder.ReportBody#getAsString()
+	 */
+	@Override
+	public Object getAsString() {
+		return this.stringBuilder.toString();
+	}
+
+	/**
+	 * @param content
+	 */
+	public void addContent(String content) {
+		stringBuilder.append(content);
+		
+	}
+	
+
+}
+
+==> builder/src/test/java/eu/jpereira/trainings/designpatterns/creational/builder/ReportAssemblerTest.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.builder;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+import eu.jpereira.trainings.designpatterns.creational.builder.model.Customer;
+import eu.jpereira.trainings.designpatterns.creational.builder.model.Report;
+import eu.jpereira.trainings.designpatterns.creational.builder.model.SaleEntry;
+import eu.jpereira.trainings.designpatterns.creational.builder.model.SoldItem;
+
+/**
+ * @author jpereira
+ * 
+ */
+public class ReportAssemblerTest {
+
+	@Test
+	public void testAssembleJSONReportBody() {
+
+		ReportAssembler assembler = new ReportAssembler();
+
+		assembler.setSaleEntry(createDummySaleEntry());
+		Report report = assembler.getReport("JSON");
+		String expected = "sale:{customer:{name:\"Bob\",phone:\"1232232\"},items:[{name:\"Computer\",quantity:2,price:99.9},{name:\"Printer\",quantity:1,price:79.8}]}";
+		assertEquals(expected, report.getAsString());
+	}
+
+	@Test
+	public void testAssembleXMLReportBody() {
+
+		ReportAssembler assembler = new ReportAssembler();
+
+		assembler.setSaleEntry(createDummySaleEntry());
+		Report report = assembler.getReport("XML");
+		String expected = "<sale><customer><name>Bob</name><phone>1232232</phone></customer><items><item><name>Computer</name><quantity>2</quantity><price>99.9</price></item><item><name>Printer</name><quantity>1</quantity><price>79.8</price></item></items></sale>";
+
+		assertEquals(expected, report.getAsString());
+
+	}
+	
+	@Test
+	public void testAssembleHTMLReportBody() {
+
+		ReportAssembler assembler = new ReportAssembler();
+
+		assembler.setSaleEntry(createDummySaleEntry());
+		Report report = assembler.getReport("HTML");
+		String expected = "<span class=\"customerName\">Bob</span><span class=\"customerPhone\">1232232</span><items><item><name>Computer</name><quantity>2</quantity><price>99.9</price></item><item><name>Printer</name><quantity>1</quantity><price>79.8</price></item></items>";
+
+		assertEquals(expected, report.getAsString());
+
+	}
+
+	/**
+	 * @return
+	 */
+	private SaleEntry createDummySaleEntry() {
+
+		SaleEntry saleEntry = new SaleEntry();
+		saleEntry.setCustomer(new Customer("Bob", "1232232"));
+		saleEntry.addSoldItem(new SoldItem("Computer", 2, 99.9));
+		saleEntry.addSoldItem(new SoldItem("Printer", 1, 79.8));
+
+		return saleEntry;
+	}
+
+}
+
+==> singleton/src/main/java/eu/jpereira/trainings/designpatterns/creational/singleton/ReportBuilder.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.singleton;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import eu.jpereira.trainings.designpatterns.creational.singleton.crwaling.CannotCrawlException;
+import eu.jpereira.trainings.designpatterns.creational.singleton.crwaling.DummySiteCrawler;
+import eu.jpereira.trainings.designpatterns.creational.singleton.crwaling.SiteCrawler;
+
+/**
+ * @author Joao Pereira
+ * 
+ */
+public class ReportBuilder {
+
+	// Instance variables
+	private Map<String, StringBuffer> sitesContens;
+
+	private SiteCrawler siteCrawler;
+
+	// Class variables
+	// Single instance
+	private static ReportBuilder instance;
+	private static List<String> configuredSites;
+
+	// Class initializer block
+	static {
+
+		configuredSites = new ArrayList<String>();
+		configuredSites.add("http://www.wikipedia.com");
+		configuredSites.add("http://jpereira.eu");
+		configuredSites.add("http://stackoverflow.com");
+	}
+
+	public ReportBuilder() {
+		initiatlize();
+	}
+
+	/**
+	 * Very time consuming initialize method...
+	 */
+	private void initiatlize() {
+
+		//defer it to an factory method
+		this.siteCrawler = createSiteCrawler();
+		
+		// Now crawl some pre-defined sites
+		for (String url : configuredSites) {
+			this.siteCrawler.withURL(url);
+		}
+		try {
+			this.setSitesContens(this.siteCrawler.crawl().packSiteContens());
+		} catch (CannotCrawlException e) {
+			// this singleton instance is in very bad shape... what wiil you do?
+			// I cannot recover from this and this instance will be useless to
+			// clients...
+			throw new RuntimeException("Could not load sites:" + e.getMessage());
+		}
+
+	}
+
+	/**
+	 * Factory method with default implementation
+	 * 
+	 * @return
+	 */
+	protected SiteCrawler createSiteCrawler() {
+
+		return new DummySiteCrawler();
+	}
+
+	/**
+	 * Get a single instance of type ReportBuilder
+	 * 
+	 * @return A single instance
+	 */
+	public static ReportBuilder getInstance() {
+		System.out.println("Getting instance for Thread " + Thread.currentThread().getId());
+		if (instance == null) {
+			System.out.println("Instance is null for Thread " + Thread.currentThread().getId());
+			instance = new ReportBuilder();
+			System.out.println("Returing " + instance.hashCode() + " instance to Thread " + Thread.currentThread().getId());
+		}
+		return instance;
+	}
+
+	/**
+	 * 
+	 * @return the sitesContens
+	 * 
+	 */
+	public Map<String, StringBuffer> getSitesContens() {
+
+		return sitesContens;
+	}
+
+	/**
+	 * @param sitesContens
+	 *            the sitesContens to set
+	 */
+	private void setSitesContens(Map<String, StringBuffer> sitesContens) {
+		this.sitesContens = sitesContens;
+	}
+
+	/**
+	 * 
+	 */
+	public static void resetInstance() {
+		instance = null;
+
+	}
+
+}
+
+==> singleton/src/main/java/eu/jpereira/trainings/designpatterns/creational/singleton/crwaling/DummySiteCrawler.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.singleton.crwaling;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
+
+/**
+ * 
+ * This class is used only to simulate a long call without using thread.sleep.
+ * It will open a connection to a set of sites and dump the contents
+ * 
+ * @author Joao Pereira
+ * 
+ */
+public class DummySiteCrawler implements SiteCrawler{
+
+	private Map<String, StringBuffer> urlContents;
+
+	public DummySiteCrawler() {
+		this.urlContents = createNewSiteContens();
+	}
+
+	public DummySiteCrawler withURL(String url) {
+		this.urlContents.put(url, new StringBuffer());
+		return this;
+	}
+
+	private void crawl(String urlString, StringBuffer targetBuffer) throws CannotCrawlException{
+		try {
+			URL url = new URL(urlString);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					url.openStream()));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				targetBuffer.append(line);
+			}
+			reader.close();
+
+		} catch (Exception e) {
+			throw new CannotCrawlException(e);
+
+		} 
+
+	}
+
+	public SiteCrawler crawl() throws CannotCrawlException {
+		for (String url : this.urlContents.keySet()) {
+			crawl(url, this.urlContents.get(url));
+		}
+		return this;
+	}
+
+	/* (non-Javadoc)
+	 * @see eu.jpereira.trainings.designpatterns.creational.singleton.SiteCrawler#getSiteContents()
+	 */
+	@Override
+	public Map<String, StringBuffer> packSiteContens() {
+		//return the reference and reuit for other instance
+		Map<String, StringBuffer> retunrContents = this.urlContents;
+		this.urlContents = createNewSiteContens();
+		return retunrContents;
+	}
+
+	/**
+	 * can override
+	 * @return
+	 */
+	protected Map<String, StringBuffer> createNewSiteContens() {
+		
+		return new HashMap<String, StringBuffer>();
+	}
+}
+
+==> singleton/src/main/java/eu/jpereira/trainings/designpatterns/creational/singleton/crwaling/SiteCrawler.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.singleton.crwaling;
+
+import java.util.Map;
+
+
+
+/**
+ * @author joao pereira
+ *
+ */
+public interface SiteCrawler {
+	
+	public SiteCrawler withURL(String url);
+			
+	public SiteCrawler crawl() throws CannotCrawlException;
+	
+	public Map<String, StringBuffer> packSiteContens();
+}
+
+==> singleton/src/main/java/eu/jpereira/trainings/designpatterns/creational/singleton/crwaling/CannotCrawlException.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.singleton.crwaling;
+
+/**
+ * @author windows
+ *
+ */
+public class CannotCrawlException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5969531467220709871L;
+
+	/**
+	 * @param e
+	 */
+	 public CannotCrawlException(Exception e) {
+		super(e);
+	}
+
+}
+
+==> singleton/src/test/java/eu/jpereira/trainings/designpatterns/creational/singleton/ReportBuilderTest.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.singleton;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+/**
+ * 
+ * @author jpereira
+ * 
+ */
+public class ReportBuilderTest {
+
+	@Before
+	public void cleanUpSingletonReference() {
+		ReportBuilder.resetInstance();
+	}
+
+	/**
+	 * Test for multhithreading
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testMultiThreading() throws InterruptedException {
+
+		List<Thread> threads = new ArrayList<Thread>();
+		// Save the references
+		List<ReportBuilder> references = Collections.synchronizedList(new ArrayList<ReportBuilder>());
+		// Create n treads
+		for (int i = 0; i < 10; i++) {
+			Thread worker = new Thread(new Worker(i, references));
+			threads.add(worker);
+			worker.start();
+			// worker.join();
+
+		}
+
+		// Don't go away until all childs have finished
+
+		for (Thread thread : threads) {
+			while (thread.isAlive()) {
+				// just wait it to die
+			}
+			System.out.println("Thread " + thread.getId() + " died!");
+
+		}
+		// assert all references are for the same object
+		for (int i = 0; i < references.size(); i++) {
+			ReportBuilder expected = references.get(i);
+			for (int j = i; j < references.size(); j++) {
+				assertEquals(expected, references.get(j));
+			}
+		}
+
+	}
+
+	@Test
+	public void testGetSingleton() {
+		ReportBuilder builder = ReportBuilder.getInstance();
+		assertNotNull(builder);
+	}
+
+	/**
+	 * Will measure init type for the lazy singleton.
+	 */
+	@Test
+	public void measureInitializeTime() {
+		long startTime = System.currentTimeMillis();
+		ReportBuilder.getInstance();
+		System.out.println("First call took: " + (System.currentTimeMillis() - startTime) + " ms");
+
+		startTime = System.currentTimeMillis();
+		ReportBuilder.getInstance();
+		System.out.println("Second call took: " + (System.currentTimeMillis() - startTime) + " ms");
+
+	}
+
+	class Worker implements Runnable {
+
+		private int number;
+		private List<ReportBuilder> myReferences;
+
+		public Worker(int number, List<ReportBuilder> references) {
+			this.setNumber(number);
+			this.myReferences = references;
+
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Runnable#run()
+		 */
+		@Override
+		public void run() {
+			// Dummy call
+			this.myReferences.add(ReportBuilder.getInstance());
+
+		}
+
+		/**
+		 * @return the number
+		 */
+		public int getNumber() {
+			return number;
+		}
+
+		/**
+		 * @param number
+		 *            the number to set
+		 */
+		public void setNumber(int number) {
+			this.number = number;
+		}
+
+	}
+}
