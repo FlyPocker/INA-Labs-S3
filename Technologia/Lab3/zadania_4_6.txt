@@ -1,0 +1,1488 @@
+==> factorymethod/src/main/java/eu/jpereira/trainings/designpatterns/creational/factorymethod/AbstractReport.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.factorymethod;
+
+public abstract class AbstractReport implements Report {
+
+	private String reportContent;
+
+	@Override
+	public String getReportContent() {
+		return reportContent;
+	}
+
+	protected void setReportContent(String content) {
+		this.reportContent = content;
+	}
+
+}
+
+==> factorymethod/src/main/java/eu/jpereira/trainings/designpatterns/creational/factorymethod/XMLReport.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.factorymethod;
+
+public class XMLReport extends AbstractReport{
+
+	@Override
+	public void generateReport(ReportData data) {
+		setReportContent("XML Report. Name: "+data.getName());
+		
+	}
+
+}
+
+==> factorymethod/src/main/java/eu/jpereira/trainings/designpatterns/creational/factorymethod/HTMLReport.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.factorymethod;
+
+public class HTMLReport extends AbstractReport {
+
+	@Override
+	public void generateReport(ReportData data) {
+		setReportContent("HTML Report. Name: " + data.getName());
+	}
+
+}
+
+==> factorymethod/src/main/java/eu/jpereira/trainings/designpatterns/creational/factorymethod/ReportData.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.factorymethod;
+
+public class ReportData {
+
+	private String name;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+
+	}
+
+}
+
+==> factorymethod/src/main/java/eu/jpereira/trainings/designpatterns/creational/factorymethod/JSONReport.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.factorymethod;
+
+public class JSONReport extends AbstractReport {
+
+	@Override
+	public void generateReport(ReportData data) {
+		setReportContent("JSON Report. Name: " + data.getName());
+
+	}
+
+}
+
+==> factorymethod/src/main/java/eu/jpereira/trainings/designpatterns/creational/factorymethod/Report.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.factorymethod;
+
+public interface Report {
+
+	/**
+	 * Create the report
+	 */
+	void generateReport(ReportData data);
+
+	/**
+	 * Get the content generated fo9r this report
+	 * 
+	 * @return
+	 */
+	String getReportContent();
+
+}
+
+==> factorymethod/src/main/java/eu/jpereira/trainings/designpatterns/creational/factorymethod/ReportGenerator.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.factorymethod;
+
+/**
+ * The Report Generator will create reports based on a given type
+ * @author jpereira
+ *
+ */
+public class ReportGenerator {
+
+	/**
+	 * Generate a new report.
+	 * @param data The report data
+	 * @param type the type of report
+	 * @return the generated report, or null of type is unknown
+	 */
+	public Report generateReport(ReportData data, String type) {
+
+		Report generatedReport = null;
+
+		if (type.equals("JSON")) {
+			generatedReport = new JSONReport();
+		} else if (type.equals("XML")) {
+			generatedReport = new XMLReport();
+		} else if (type.equals("HTML")) {
+			generatedReport = new HTMLReport();
+		} else if (type.equals("PDF")) {
+			generatedReport = new PDFReport();
+		}
+		if (generatedReport != null) {
+			generatedReport.generateReport(data);
+		}
+
+		return generatedReport;
+	}
+}
+
+==> factorymethod/src/main/java/eu/jpereira/trainings/designpatterns/creational/factorymethod/PDFReport.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.factorymethod;
+
+public class PDFReport extends AbstractReport {
+
+	@Override
+	public void generateReport(ReportData data) {
+		setReportContent("PDF Report. Name: " + data.getName());
+
+	}
+
+}
+
+==> factorymethod/src/test/java/eu/jpereira/trainings/designpatterns/creational/factorymethod/ReportGeneratorTest.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+package eu.jpereira.trainings.designpatterns.creational.factorymethod;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import eu.jpereira.trainings.designpatterns.creational.factorymethod.Report;
+import eu.jpereira.trainings.designpatterns.creational.factorymethod.ReportData;
+import eu.jpereira.trainings.designpatterns.creational.factorymethod.ReportGenerator;
+public class ReportGeneratorTest extends AbstractReportingTest{
+
+	
+	
+	@Test
+	public void testCreateJSONReport() {
+		ReportData reportData = createDummyReportData();
+		ReportGenerator generator = new ReportGenerator();
+		Report generatedReport = generator.generateReport(reportData, "JSON");
+		assertEquals("JSON Report. Name: "+reportData.getName(), generatedReport.getReportContent());
+	}
+	
+	
+	@Test
+	public void testCreateXMLReport() {
+		ReportData reportData = createDummyReportData();
+		ReportGenerator generator = new ReportGenerator();
+		Report generatedReport = generator.generateReport(reportData, "XML");
+		assertEquals("XML Report. Name: "+reportData.getName(), generatedReport.getReportContent());
+	}
+	
+	@Test
+	public void testCreateHTMLReport() {
+		ReportData reportData = createDummyReportData();
+		ReportGenerator generator = new ReportGenerator();
+		Report generatedReport = generator.generateReport(reportData, "HTML");
+		assertEquals("HTML Report. Name: "+reportData.getName(), generatedReport.getReportContent());
+	}
+	
+	@Test
+	public void testCreatePDFReport() {
+		ReportData reportData = createDummyReportData();
+		ReportGenerator generator = new ReportGenerator();
+		Report generatedReport = generator.generateReport(reportData, "PDF");
+		assertEquals("PDF Report. Name: "+reportData.getName(), generatedReport.getReportContent());
+	}
+	
+
+	
+	
+}
+
+==> factorymethod/src/test/java/eu/jpereira/trainings/designpatterns/creational/factorymethod/AbstractReportingTest.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.factorymethod;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
+import org.junit.Ignore;
+
+import eu.jpereira.trainings.designpatterns.creational.factorymethod.ReportData;
+
+@Ignore
+public abstract class AbstractReportingTest {
+
+	
+	private SecureRandom random = new SecureRandom();
+	
+	
+	/**
+	 * Create a dummy ReportData Object
+	 * @return
+	 */
+	protected ReportData createDummyReportData() {
+		ReportData dummyReportDate = new ReportData();
+		dummyReportDate.setName("Dummy "+generateRandomString());
+		return dummyReportDate;
+	}
+	
+	/**
+	 * Generate an random String
+	 * @return
+	 */
+	private String generateRandomString() {
+		return new BigInteger(132, random).toString(32);
+	}
+	
+	
+
+}
+
+==> abstractfactory/src/main/java/eu/jpereira/trainings/designpatterns/creational/abstractfactory/ReportHeader.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.abstractfactory;
+
+/**
+ * @author jpereira
+ *
+ */
+public interface ReportHeader extends ReportElement{
+
+}
+
+==> abstractfactory/src/main/java/eu/jpereira/trainings/designpatterns/creational/abstractfactory/Report.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.abstractfactory;
+
+import eu.jpereira.trainings.designpatterns.creational.abstractfactory.json.JSONReportBody;
+import eu.jpereira.trainings.designpatterns.creational.abstractfactory.json.JSONReportFooter;
+import eu.jpereira.trainings.designpatterns.creational.abstractfactory.json.JSONReportHeader;
+import eu.jpereira.trainings.designpatterns.creational.abstractfactory.xml.XMLReportBody;
+import eu.jpereira.trainings.designpatterns.creational.abstractfactory.xml.XMLReportFooter;
+import eu.jpereira.trainings.designpatterns.creational.abstractfactory.xml.XMLReportHeader;
+
+public class Report {
+
+	private String reportContent;
+	private ReportBody body;
+	private ReportFooter footer;
+	private ReportHeader header;
+	private String reportType;
+	
+
+	
+	
+	/**
+	 * @param string
+	 */
+	public Report(String string) {
+		this.reportType = string;
+		if ( reportType.equals("JSON")) {
+			//to compose Report with JSON objects
+			this.setBody(new JSONReportBody());
+			this.setFooter(new JSONReportFooter());
+			this.setHeader(new JSONReportHeader());
+		} else {
+			this.setFooter(new XMLReportFooter());
+			this.setHeader(new XMLReportHeader());
+			this.setBody(new XMLReportBody());
+		}
+	}
+
+
+	public void setBody(ReportBody body) {
+		this.body = body;
+
+	}
+
+	
+	public void setFooter(ReportFooter footer) {
+		this.footer = footer;
+
+	}
+
+	
+	public void setHeader(ReportHeader header) {
+		this.header = header;
+	}
+
+	public void setReportContent(String reportContent) {
+		this.reportContent = reportContent;
+	}
+
+
+	public String getReportContent() {
+		return reportContent;
+	}
+
+
+	public ReportBody getBody() {
+		return body;
+	}
+
+
+	public ReportFooter getFooter() {
+		return footer;
+	}
+
+
+	public ReportHeader getHeader() {
+		return header;
+	}
+
+	
+}
+
+==> abstractfactory/src/main/java/eu/jpereira/trainings/designpatterns/creational/abstractfactory/xml/XMLReportBody.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.abstractfactory.xml;
+
+import eu.jpereira.trainings.designpatterns.creational.abstractfactory.ReportBody;
+
+
+/**
+ * @author jpereira
+ * 
+ */
+public class XMLReportBody implements ReportBody  {
+
+	/* (non-Javadoc)
+	 * @see eu.jpereira.trainings.designpatterns.creational.asbtractfactory.ReportElement#getType()
+	 */
+	@Override
+	public String getType() {
+		
+		return "XML";
+	}
+
+
+}
+
+==> abstractfactory/src/main/java/eu/jpereira/trainings/designpatterns/creational/abstractfactory/xml/XMLReportFooter.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.abstractfactory.xml;
+
+import eu.jpereira.trainings.designpatterns.creational.abstractfactory.ReportFooter;
+
+/**
+ * @author jpereira
+ *
+ */
+public class XMLReportFooter implements ReportFooter{
+
+	/* (non-Javadoc)
+	 * @see eu.jpereira.trainings.designpatterns.creational.asbtractfactory.ReportElement#getType()
+	 */
+	@Override
+	public String getType() {
+		return "XML";
+	}
+
+}
+
+==> abstractfactory/src/main/java/eu/jpereira/trainings/designpatterns/creational/abstractfactory/xml/XMLReportHeader.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.abstractfactory.xml;
+
+import eu.jpereira.trainings.designpatterns.creational.abstractfactory.ReportHeader;
+
+/**
+ * @author jpereira
+ * 
+ */
+public class XMLReportHeader implements ReportHeader {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.jpereira.trainings.designpatterns.creational.asbtractfactory.ReportElement
+	 * #getType()
+	 */
+	@Override
+	public String getType() {
+		return "XML";
+	}
+
+}
+
+==> abstractfactory/src/main/java/eu/jpereira/trainings/designpatterns/creational/abstractfactory/ReportFooter.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.abstractfactory;
+
+/**
+ * @author jpereira
+ *
+ */
+public interface ReportFooter extends ReportElement{
+
+}
+
+==> abstractfactory/src/main/java/eu/jpereira/trainings/designpatterns/creational/abstractfactory/ReportBody.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.abstractfactory;
+
+/**
+ * @author jpereira
+ *
+ */
+public interface ReportBody extends ReportElement{
+
+}
+
+==> abstractfactory/src/main/java/eu/jpereira/trainings/designpatterns/creational/abstractfactory/ReportElement.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.abstractfactory;
+
+/**
+ * @author jpereira
+ *
+ */
+public interface ReportElement {
+
+	String getType();
+}
+
+==> abstractfactory/src/main/java/eu/jpereira/trainings/designpatterns/creational/abstractfactory/json/JSONReportBody.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.abstractfactory.json;
+
+import eu.jpereira.trainings.designpatterns.creational.abstractfactory.ReportBody;
+
+/**
+ * @author jpereira
+ * 
+ */
+public class JSONReportBody implements ReportBody {
+
+	/* (non-Javadoc)
+	 * @see eu.jpereira.trainings.designpatterns.creational.asbtractfactory.ReportElement#getType()
+	 */
+	@Override
+	public String getType() {
+		return "JSON";
+	}
+
+}
+
+==> abstractfactory/src/main/java/eu/jpereira/trainings/designpatterns/creational/abstractfactory/json/JSONReportHeader.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.abstractfactory.json;
+
+import eu.jpereira.trainings.designpatterns.creational.abstractfactory.ReportHeader;
+
+/**
+ * @author jpereira
+ * 
+ */
+public class JSONReportHeader implements ReportHeader {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.jpereira.trainings.designpatterns.creational.asbtractfactory.ReportElement
+	 * #getType()
+	 */
+	@Override
+	public String getType() {
+
+		return "JSON";
+	}
+
+}
+
+==> abstractfactory/src/main/java/eu/jpereira/trainings/designpatterns/creational/abstractfactory/json/JSONReportFooter.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.abstractfactory.json;
+
+import eu.jpereira.trainings.designpatterns.creational.abstractfactory.ReportFooter;
+
+/**
+ * @author jpereira
+ * 
+ */
+public class JSONReportFooter implements ReportFooter {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.jpereira.trainings.designpatterns.creational.asbtractfactory.ReportElement
+	 * #getType()
+	 */
+	@Override
+	public String getType() {
+
+		return "JSON";
+	}
+
+}
+
+==> abstractfactory/src/test/java/eu/jpereira/trainings/designpatterns/creational/abstractfactory/ReportTest.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.creational.abstractfactory;
+
+import org.junit.Test;
+
+import eu.jpereira.trainings.designpatterns.creational.abstractfactory.Report;
+
+import static org.junit.Assert.*;
+
+/**
+ * @author jpereira
+ * 
+ */
+
+public class ReportTest {
+
+	@Test
+	public void testCreateJSONReport() {
+
+		Report report = new Report("JSON");
+		assertEquals("JSON", report.getBody().getType());
+		assertEquals("JSON", report.getHeader().getType());
+		assertEquals("JSON", report.getFooter().getType());
+
+	}
+
+	@Test
+	public void testCreateXMLReport() {
+
+		Report report = new Report("XML");
+		assertEquals("XML", report.getBody().getType());
+		assertEquals("XML", report.getHeader().getType());
+		assertEquals("XML", report.getFooter().getType());
+
+	}
+
+}
+
+==> composite/src/main/java/eu/jpereira/trainings/designpatterns/structural/composite/model/ShapeDoesNotSupportChildren.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.composite.model;
+
+/**
+ * @author jpereira
+ *
+ */
+public class ShapeDoesNotSupportChildren extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+}
+
+==> composite/src/main/java/eu/jpereira/trainings/designpatterns/structural/composite/model/Triangle.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.composite.model;
+
+
+
+/**
+ * @author windows
+ *
+ */
+public class Triangle extends CompositeShape{
+
+	/* (non-Javadoc)
+	 * @see eu.jpereira.trainings.designpatterns.structural.composite.model.Shape#getType()
+	 */
+	@Override
+	public ShapeType getType() {
+		// TODO Auto-generated method stub
+		return ShapeType.TRIANGLE;
+	}
+
+}
+
+==> composite/src/main/java/eu/jpereira/trainings/designpatterns/structural/composite/model/Line.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.composite.model;
+
+
+
+/**
+ * @author jpereira
+ *
+ */
+public class Line extends LeafShape {
+
+	/* (non-Javadoc)
+	 * @see eu.jpereira.trainings.designpatterns.structural.composite.model.Shape#getType()
+	 */
+	@Override
+	public ShapeType  getType() {
+
+		return ShapeType.LINE;
+	}
+
+}
+
+==> composite/src/main/java/eu/jpereira/trainings/designpatterns/structural/composite/model/Shape.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.composite.model;
+
+
+/**
+ * @author jpereira
+ * 
+ */
+public abstract class Shape {
+	// The shape coordinates
+	private int x;
+	private int y;
+
+	/**
+	 * If this object is a CompositeShape, return it. Null otherwise.
+	 * 
+	 * @return an compositeShape instance if this is an composite, null
+	 *         otherwise
+	 */
+	public CompositeShape asComposite() {
+		//TODO: Implement
+		return null;
+	}
+
+	/**
+	 * Move a shape in a 2D scale
+	 * 
+	 * @param xIncrement
+	 *            The increment in X axis
+	 * @param yIncremet
+	 *            The increment in the Y axis
+	 */
+	public void move(int xIncrement, int yIncrement) {
+		this.x += xIncrement;
+		this.y += yIncrement;
+		// if is composite, delegate to children
+		//TODO: COmplete
+	}
+
+	/**
+	 * @return the x coordinate
+	 */
+	public int getX() {
+		return x;
+	}
+
+	/**
+	 * @param x
+	 *            the x coordinate to set
+	 */
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	/**
+	 * @return the y coordinate
+	 */
+	public int getY() {
+		return y;
+	}
+
+	/**
+	 * @param y
+	 *            the y coordinate to set
+	 */
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	/**
+	 * Each instance of a Shape must know it's type
+	 * @return
+	 */
+	public abstract ShapeType getType();
+
+}
+
+==> composite/src/main/java/eu/jpereira/trainings/designpatterns/structural/composite/model/CompositeShape.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.composite.model;
+
+import java.util.List;
+
+
+/**
+ * @author Joao Pereira
+ * 
+ */
+public abstract class CompositeShape extends Shape {
+
+	List<Shape> shapes;
+
+	public CompositeShape() {
+		this.shapes = createShapesList();
+	}
+
+	/**
+	 * Remove a shape from this shape childrens
+	 * 
+	 * @param shape
+	 *            the shape to remove
+	 * @return true if the shape was present and was removed, false if the shape
+	 *         was not present
+	 */
+	public boolean removeShape(Shape shape) {
+		// TODO: implement
+		return false;
+
+	}
+
+	/**
+	 * Return the total shapes count in case this is a composite
+	 * 
+	 * @return the total count of shapes if the shape is composite. -1 otherwise
+	 */
+	public int getShapeCount() {
+		// TODO: implement
+		return 0;
+
+	}
+
+	/**
+	 * Add a shape to this shape.
+	 * 
+	 * @param shape
+	 *            The shape to add
+	 * @throws ShapeDoesNotSupportChildren
+	 *             if this shape is not a composite
+	 */
+	public void addShape(Shape shape) {
+		// TODO: Implement
+	}
+
+	public List<Shape> getShapes() {
+		// TODO: Implement
+		return null;
+
+	}
+
+	/**
+	 * @param circle
+	 * @return
+	 */
+	public List<Shape> getShapesByType(ShapeType circle) {
+		return null;
+		// TODO: Implement
+	}
+
+	/**
+	 * Return all shapes that are leafs in the tree
+	 * 
+	 * @return
+	 */
+	public List<Shape> getLeafShapes() {
+		// TODO: Implement
+		return null;
+	}
+
+	/**
+	 * Factory method for the list of children of this shape
+	 * 
+	 * @return
+	 */
+	protected List<Shape> createShapesList() {
+		return null;
+		// TODO: Implement
+	}
+}
+
+==> composite/src/main/java/eu/jpereira/trainings/designpatterns/structural/composite/model/ShapeType.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.composite.model;
+
+/**
+ * @author windows
+ *
+ */
+public enum ShapeType {
+	CIRCLE, LINE, RECTANGLE, TRIANGLE;
+
+}
+
+==> composite/src/main/java/eu/jpereira/trainings/designpatterns/structural/composite/model/Circle.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.composite.model;
+
+
+
+/**
+ * @author Joao Pereira
+ *
+ */
+public class Circle extends CompositeShape {
+
+	/* (non-Javadoc)
+	 * @see eu.jpereira.trainings.designpatterns.structural.composite.model.Shape#getType()
+	 */
+	@Override
+	public ShapeType getType() {
+		return ShapeType.CIRCLE;
+	}
+
+}
+
+==> composite/src/main/java/eu/jpereira/trainings/designpatterns/structural/composite/model/LeafShape.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.composite.model;
+
+/**
+ * @author jpereira
+ * 
+ */
+public abstract class LeafShape extends Shape {
+
+}
+
+==> composite/src/main/java/eu/jpereira/trainings/designpatterns/structural/composite/model/Rectangle.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.composite.model;
+
+
+
+/**
+ * @author jpereira
+ *
+ */
+public class Rectangle extends CompositeShape{
+
+	/* (non-Javadoc)
+	 * @see eu.jpereira.trainings.designpatterns.structural.composite.model.Shape#getType()
+	 */
+	@Override
+	public ShapeType getType() {
+
+		return ShapeType.RECTANGLE;
+	}
+
+}
+
+==> composite/src/test/java/eu/jpereira/trainings/designpatterns/structural/composite/ShapeTest.java <==
+/**
+ * Copyright 2011 Joao Miguel Pereira
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+package eu.jpereira.trainings.designpatterns.structural.composite;
+
+import java.util.List;
+
+import org.junit.Test;
+
+import eu.jpereira.trainings.designpatterns.structural.composite.model.Circle;
+import eu.jpereira.trainings.designpatterns.structural.composite.model.Line;
+import eu.jpereira.trainings.designpatterns.structural.composite.model.Rectangle;
+import eu.jpereira.trainings.designpatterns.structural.composite.model.Shape;
+import eu.jpereira.trainings.designpatterns.structural.composite.model.ShapeDoesNotSupportChildren;
+import eu.jpereira.trainings.designpatterns.structural.composite.model.ShapeType;
+import eu.jpereira.trainings.designpatterns.structural.composite.model.Triangle;
+import static org.junit.Assert.*;
+
+/**
+ * @author jpereira
+ * 
+ */
+public class ShapeTest {
+
+	@Test
+	public void testAddShape() throws ShapeDoesNotSupportChildren {
+
+		// Create a circle
+		Shape circle = new Circle();
+		// Create a line
+		Shape line = new Line();
+		Shape rectangle = new Rectangle();
+		Shape triangle = new Triangle();
+
+		// Add a line to the circle
+		circle.asComposite().addShape(line);
+		// add a rectangle to a circle
+		circle.asComposite().addShape(rectangle);
+		circle.asComposite().addShape(triangle);
+
+		// assert circle has three children
+		assertEquals(3, circle.asComposite().getShapeCount());
+
+	}
+
+	@Test
+	public void testGetShapesByTye() {
+		Shape shape = createCompositeShapeFixture();
+		// Assert it contains RECTANGLE (well, I know that fixture...)
+		assertNotNull(shape.asComposite().getShapesByType(ShapeType.RECTANGLE));
+		assertEquals(1, shape.asComposite().getShapesByType(ShapeType.RECTANGLE).size());
+
+	}
+
+	@Test
+	public void testRemoveShape() {
+
+		Shape shape = createCompositeShapeFixture();
+		// Assert it contains RECTANGLE (well, I know that fixture...)
+		assertEquals(1, shape.asComposite().getShapesByType(ShapeType.RECTANGLE).size());
+
+		// Now remove it
+		assertTrue(shape.asComposite().removeShape(shape.asComposite().getShapesByType(ShapeType.RECTANGLE).get(0)));
+		assertEquals(0, shape.asComposite().getShapesByType(ShapeType.RECTANGLE).size());
+	}
+
+	@Test
+	public void testMoveShape() {
+		Shape testShape = createCompositeShapeFixture();
+		//Move a the shape
+		testShape.move(2, 2);
+		assertEquals(2,testShape.getX());
+		assertEquals(2, testShape.getY());
+		
+		//each shape in the tree has to move also
+		for (Shape aShape: testShape.asComposite().getShapes() ) {
+			assertEquals(2, aShape.getX());
+			assertEquals(2, aShape.getY());
+		}
+	}
+	
+	@Test
+	public void testMoveLeafsShapes() {
+		Shape testShape = createCompositeShapeFixture();
+		
+		assertEquals(0, testShape.getX());
+		assertEquals(0, testShape.getY());
+		//Get all primitives
+		List<Shape> leafs = testShape.asComposite().getLeafShapes();
+		
+		for (Shape leaf : leafs ) {
+			leaf.move(2, 2);
+			assertEquals(2, leaf.getX());
+			assertEquals(2, leaf.getY());
+		}
+		assertEquals(0, testShape.getX());
+		assertEquals(0, testShape.getY());
+	}
+	
+	@Test
+	public void moveHierarchyIndependently() {
+		
+		Shape rectangle = new Rectangle();
+		//inside the rectangle, has a circle and another rectangle
+		Shape innerRectangle = new Rectangle();
+		Shape innerCircle = new Circle();
+		rectangle.asComposite().addShape(innerCircle);
+		rectangle.asComposite().addShape(innerRectangle);
+		//inside the innerRectangle, add  two lines
+		Shape innerInnerlineA = new Line();
+		Shape innerInnerlineB = new Line();
+		innerRectangle.asComposite().addShape(innerInnerlineA);
+		innerRectangle.asComposite().addShape(innerInnerlineB);
+		//inside the innerCircle add a triangle
+		Shape innerInnerTriangle = new Triangle();
+		innerCircle.asComposite().addShape(innerInnerTriangle);
+		//inside the innerInnerTriagle let's add a line
+		Shape innerInnerInnerLine = new Line();
+		innerInnerTriangle.asComposite().addShape(innerInnerInnerLine);
+		
+		
+		
+		//Move the rectangle all together
+		rectangle.move(3, 3);
+		//rectangle still have the same position
+		assertEquals(3, rectangle.getX());
+		assertEquals(3, rectangle.getY());
+
+		for ( Shape aShape : rectangle.asComposite().getShapes() ) {
+			assertEquals(3, aShape.getX());
+			assertEquals(3, aShape.getY());
+		}
+		
+		//Move only the innerCircle
+		innerCircle.move(1, 1);
+		//innerRectangle still have the same position
+		assertEquals(3, innerRectangle.getX());
+		assertEquals(3, innerRectangle.getY());
+
+		//innerCircle and all children must have moved
+		assertEquals(4,innerCircle.getX());
+		assertEquals(4,innerCircle.getY());
+		//all children has to move
+		assertEquals(4, innerInnerTriangle.getX());
+		assertEquals(4, innerInnerTriangle.getY());
+		
+		assertEquals(4, innerInnerInnerLine.getY());
+		assertEquals(4, innerInnerInnerLine.getX());
+		
+	}
+	/**
+	 * Factory method for composite fixture
+	 * @return
+	 */
+	protected Shape createCompositeShapeFixture() {
+		// Create a circle
+		Shape circle = new Circle();
+		// Create a line
+		Shape line = new Line();
+		Shape rectangle = new Rectangle();
+		Shape triangle = new Triangle();
+
+		// Add a line to the circle
+		circle.asComposite().addShape(line);
+		// add a rectangle to a circle
+		circle.asComposite().addShape(rectangle);
+		circle.asComposite().addShape(triangle);
+		return circle;
+	}
+
+	
+	
+}

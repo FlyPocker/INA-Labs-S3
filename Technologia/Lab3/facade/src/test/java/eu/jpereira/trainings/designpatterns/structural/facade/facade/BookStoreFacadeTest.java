@@ -24,6 +24,7 @@ import eu.jpereira.trainings.designpatterns.structural.facade.model.Book;
 import eu.jpereira.trainings.designpatterns.structural.facade.model.Customer;
 import eu.jpereira.trainings.designpatterns.structural.facade.model.DispatchReceipt;
 import eu.jpereira.trainings.designpatterns.structural.facade.model.Order;
+import eu.jpereira.trainings.designpatterns.structural.facade.DefaultBookstoreFacade;
 
 /**
  * @author windows
@@ -71,6 +72,12 @@ public class BookStoreFacadeTest extends AbstractClientTest {
 		// impl.setWarehouseService(wharehouseService)
 		// ...
 		// Return an instance of your facade implementation
-		return null;
+		DefaultBookstoreFacade impl = new DefaultBookstoreFacade();
+		impl.setCustomerService(customerService);
+		impl.setBookService(bookService);
+		impl.setOrderingService(orderingService);
+		impl.setWarehouseService(warehouseService);
+		impl.setCustomerNotificationService(customerNotificationService);
+		return impl;
 	}
 }

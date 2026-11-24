@@ -20,7 +20,7 @@ package eu.jpereira.trainings.designpatterns.creational.factorymethod;
  * @author jpereira
  *
  */
-public class ReportGenerator {
+public abstract class ReportGenerator {
 
 	/**
 	 * Generate a new report.
@@ -28,23 +28,11 @@ public class ReportGenerator {
 	 * @param type the type of report
 	 * @return the generated report, or null of type is unknown
 	 */
-	public Report generateReport(ReportData data, String type) {
-
-		Report generatedReport = null;
-
-		if (type.equals("JSON")) {
-			generatedReport = new JSONReport();
-		} else if (type.equals("XML")) {
-			generatedReport = new XMLReport();
-		} else if (type.equals("HTML")) {
-			generatedReport = new HTMLReport();
-		} else if (type.equals("PDF")) {
-			generatedReport = new PDFReport();
-		}
-		if (generatedReport != null) {
-			generatedReport.generateReport(data);
-		}
-
+	public Report generateReport(ReportData data){
+		Report generatedReport = instanceReport();
+		generatedReport.generateReport(data);
 		return generatedReport;
 	}
+
+	protected abstract Report instanceReport();
 }

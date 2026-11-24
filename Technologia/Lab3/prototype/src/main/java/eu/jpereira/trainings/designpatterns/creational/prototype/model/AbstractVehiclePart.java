@@ -33,8 +33,16 @@ public abstract class AbstractVehiclePart implements VehiclePart{
 	 this.partProperties = properties;
 	}
 
+	public Properties getPartProperties() {
+		return this.partProperties;
+	}
+
 	@Override
 	public VehiclePart clone() throws CloneNotSupportedException  {
-		return (VehiclePart)super.clone();
+		AbstractVehiclePart clonedPart = (AbstractVehiclePart) super.clone();
+		if (this.partProperties != null) {
+			clonedPart.partProperties = (Properties) this.partProperties.clone();
+		}
+		return clonedPart;
 	}
 }

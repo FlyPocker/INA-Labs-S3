@@ -70,8 +70,15 @@ public class Vehicle implements Cloneable {
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
-		//TODO: Implement clone
-		return super.clone();
+		Vehicle clonedVehicle = (Vehicle) super.clone();
+		if (this.parts != null) {
+			List<VehiclePart> clonedParts = new ArrayList<VehiclePart>();
+			for (VehiclePart vehiclePart : this.parts) {
+				clonedParts.add(vehiclePart.clone());
+			}
+			clonedVehicle.setParts(clonedParts);
+		}
+		return clonedVehicle;
 	}
 	
 	

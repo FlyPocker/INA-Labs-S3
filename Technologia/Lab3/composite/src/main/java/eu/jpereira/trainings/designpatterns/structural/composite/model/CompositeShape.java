@@ -15,6 +15,7 @@
  */
 package eu.jpereira.trainings.designpatterns.structural.composite.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -30,6 +31,19 @@ public abstract class CompositeShape extends Shape {
 		this.shapes = createShapesList();
 	}
 
+	@Override 
+	public CompositeShape asComposite() {
+		return this;
+	}
+
+	@Override 
+	public void move(int xIncrement, int yIncrement) {
+		super.move(xIncrement, yIncrement);
+		for (Shape shape : this.shapes) {
+			shape.move(xIncrement, yIncrement);
+		}
+	}
+
 	/**
 	 * Remove a shape from this shape childrens
 	 * 
@@ -40,8 +54,7 @@ public abstract class CompositeShape extends Shape {
 	 */
 	public boolean removeShape(Shape shape) {
 		// TODO: implement
-		return false;
-
+		return this.shapes.remove(shape);
 	}
 
 	/**
@@ -51,7 +64,7 @@ public abstract class CompositeShape extends Shape {
 	 */
 	public int getShapeCount() {
 		// TODO: implement
-		return 0;
+		return this.shapes.size();
 
 	}
 
@@ -65,21 +78,28 @@ public abstract class CompositeShape extends Shape {
 	 */
 	public void addShape(Shape shape) {
 		// TODO: Implement
+		this.shapes.add(shape);
 	}
 
 	public List<Shape> getShapes() {
 		// TODO: Implement
-		return null;
+		return this.shapes;
 
 	}
 
 	/**
-	 * @param circle
+	 * @param type
 	 * @return
 	 */
-	public List<Shape> getShapesByType(ShapeType circle) {
-		return null;
+	public List<Shape> getShapesByType(ShapeType type) {
+		List<Shape> result = new ArrayList<Shape>();
+		for (Shape shape : this.shapes) {
+			if (shape.getType().equals(type)) {
+				result.add(shape);
+			}
+		}
 		// TODO: Implement
+		return result;
 	}
 
 	/**
@@ -89,7 +109,15 @@ public abstract class CompositeShape extends Shape {
 	 */
 	public List<Shape> getLeafShapes() {
 		// TODO: Implement
-		return null;
+		List<Shape> result = new ArrayList<Shape>();
+		for (Shape shape : this.shapes) {
+			if (shape.asComposite() == null) {
+				result.add(shape);
+			}else{
+				result.addAll(shape.asComposite().getLeafShapes());
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -98,7 +126,7 @@ public abstract class CompositeShape extends Shape {
 	 * @return
 	 */
 	protected List<Shape> createShapesList() {
-		return null;
+		return new ArrayList<Shape>();
 		// TODO: Implement
 	}
 }

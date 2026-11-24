@@ -31,6 +31,15 @@ public abstract class AbstractEventMapper implements EventMapper {
 
 	private List<ApplianceEventObserver> observers;
 
+	@Override
+	public void addObserver(ApplianceEventObserver observer) {
+		this.observers.add(observer);
+	}
+
+	@Override
+	public void removeObserver(ApplianceEventObserver observer) {
+		this.observers.remove(observer);
+	}
 	
 	protected void updateObservers(ApplianceEvent event) {
 		for ( ApplianceEventObserver observer : this.observers ) {

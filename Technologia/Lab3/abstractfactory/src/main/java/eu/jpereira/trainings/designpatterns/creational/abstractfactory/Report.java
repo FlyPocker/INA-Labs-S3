@@ -36,18 +36,10 @@ public class Report {
 	/**
 	 * @param string
 	 */
-	public Report(String string) {
-		this.reportType = string;
-		if ( reportType.equals("JSON")) {
-			//to compose Report with JSON objects
-			this.setBody(new JSONReportBody());
-			this.setFooter(new JSONReportFooter());
-			this.setHeader(new JSONReportHeader());
-		} else {
-			this.setFooter(new XMLReportFooter());
-			this.setHeader(new XMLReportHeader());
-			this.setBody(new XMLReportBody());
-		}
+	public Report(ReportElementsFactory factory) {
+		this.setBody(factory.createReportBody());
+		this.setFooter(factory.createReportFooter());
+		this.setHeader(factory.createReportHeader());
 	}
 
 
